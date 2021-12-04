@@ -13,8 +13,6 @@ public class Car {
     public Car(int CarID, int CarRentCost, String CarCondition, String CarModel, int CarMileage) throws IOException {
         if (CarRentCost <= 0) {
             throw new IOException("Wrong rent cost!");
-        } else if (CarCondition != "excellent" || CarCondition != "good" || CarCondition != "average") {
-            throw new IOException("Wrong car condition!");
         } else if (CarMileage <= 0) {
             throw new IOException("Wrong car mileage");
         }
@@ -28,11 +26,11 @@ public class Car {
 
     @Override
     public String toString() {
-        return "ID = " + CarID +
-                "\tCar model = '" + CarModel +
-                "\tCar condition = " + CarCondition +
-                "\tCar mileage = " + CarMileage +
-                "\tCar rent cost = " + CarRentCost + "$" +
-                "\tis rent? '" + isRent + "";
+        return "ID = " + CarID + " | Car model = "
+                + CarModel + " | Car condition = "
+                + CarCondition + " | Car mileage = "
+                + CarMileage + " | Car rent cost = "
+                + CarRentCost + "$" + " | is rent? "
+                + isRent + "";
     }
 }

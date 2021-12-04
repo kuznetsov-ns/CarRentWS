@@ -8,14 +8,14 @@ import java.io.IOException;
 public interface CarRent {
     @WebMethod
     public void showAllCars();
-    @WebMethod()
+    @WebMethod
     public void addNewCar(String carModel, int carMileage, String carCondition, int rentCost) throws IOException;
-    @WebMethod()
+    @WebMethod
     public void showCertainCars(String carModel);
-    @WebMethod()
+    @WebMethod
     public void changeCarSpecifications(int ID, String carCondition, int carMileage) throws IOException;
-    @WebMethod()
+    @WebMethod
     public void rentCar(int ID, int DaysCount) throws IOException;
-    @WebMethod()
+    @WebMethod
     public void backCar(int ID) throws IOException;
 }

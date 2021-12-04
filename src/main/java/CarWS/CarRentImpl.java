@@ -2,11 +2,10 @@ package CarWS;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.io.IOException;
 
-@WebService()
+@WebService(endpointInterface = "CarWS.CarRent")
 public class CarRentImpl implements CarRent {
     private Hashtable hash;
     private int totalCars;
@@ -16,32 +15,29 @@ public class CarRentImpl implements CarRent {
         totalCars = 0;
     }
 
-    @WebMethod()
+    @WebMethod
     public void showAllCars() {
-        Enumeration allCars;
-        String str;
-        allCars = hash.keys();
-        while (allCars.hasMoreElements()) {
-            str = (String) allCars.nextElement();
-            System.out.println(str + ":" + hash.get(str));
+        for (int i = 0; i < totalCars; i++) {
+            System.out.println(hash.get(i).toString());
         }
     }
 
-    @WebMethod()
+    @WebMethod
     public void addNewCar(String carModel, int carMileage, String carCondition, int rentCost) throws IOException {
         Car newCar = new Car(totalCars, rentCost, carCondition, carModel, carMileage);
         hash.put(newCar.CarID, newCar);
-        System.out.println("Car ID = " + totalCars);
+        System.out.println("New car ID = " + totalCars);
         totalCars++;
     }
 
-    @WebMethod()
+    @WebMethod
     public void showCertainCars(String carModel) {
         int totalCarsFound = 0;
+        System.out.println("\n" + carModel + " cars: \n");
         for (int i = 0; i < totalCars - 1; i++) {
             Car c = (Car) hash.get(i);
-            if (c.CarModel == carModel) {
-                System.out.println(c);
+            if (c.CarModel.equals(carModel)) {
+                System.out.println(hash.get(i).toString());
                 totalCarsFound++;
             }
         }
@@ -49,12 +45,10 @@ public class CarRentImpl implements CarRent {
             System.out.println("No matches found!");
     }
 
-    @WebMethod()
+    @WebMethod
     public void changeCarSpecifications(int ID, String carCondition, int carMileage) throws IOException {
         Car c = (Car) hash.get(ID);
-        if (carCondition != "excellent" || carCondition != "good" || carCondition != "average") {
-            throw new IOException("Wrong car condition!");
-        } else if (carMileage <= c.CarMileage) {
+        if (carMileage <= c.CarMileage) {
             throw new IOException("Wrong car mileage");
         }
         c.CarCondition = carCondition;
@@ -62,7 +56,7 @@ public class CarRentImpl implements CarRent {
         hash.put(ID, c);
     }
 
-    @WebMethod()
+    @WebMethod
     public void rentCar(int ID, int DaysCount) throws IOException {
         if (DaysCount <= 0) {
             throw new IOException("Wrong number of days!");
@@ -79,7 +73,7 @@ public class CarRentImpl implements CarRent {
         System.out.println("Total rent cost is " + totalCost);
     }
 
-    @WebMethod()
+    @WebMethod
     public void backCar(int ID) throws IOException {
         if (ID < 0 || ID > totalCars) {
             throw new IOException("Wrong car ID");
