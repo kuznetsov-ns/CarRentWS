@@ -1,4 +1,4 @@
-package CarWS;
+package soap;
 
 import java.io.IOException;
 
@@ -9,7 +9,7 @@ public class Car {
     public String CarModel;
     public int CarMileage;
     public String isRent;
-    public Car() {}
+    public Car() {};
     public Car(int CarID, int CarRentCost, String CarCondition, String CarModel, int CarMileage) throws IOException {
         if (CarRentCost <= 0) {
             throw new IOException("Wrong rent cost!");
@@ -23,6 +23,14 @@ public class Car {
         this.CarMileage = CarMileage;
         this.isRent = "NO";
     }
+    public Car(Car car) {
+        this.CarID = car.CarID;
+        this.CarRentCost = car.CarRentCost;
+        this.CarCondition = car.CarCondition;
+        this.CarModel = car.CarModel;
+        this.CarMileage = car.CarMileage;
+        this.isRent = car.isRent;
+    }
 
     @Override
     public String toString() {
@@ -34,3 +42,4 @@ public class Car {
                 + isRent + "";
     }
 }
+

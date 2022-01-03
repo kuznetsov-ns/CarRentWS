@@ -1,18 +1,51 @@
-package CarWS;
+package soap;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import java.util.Hashtable;
 import java.io.IOException;
+import java.util.Vector;
+import javax.xml.ws.Endpoint;
 
-@WebService(endpointInterface = "CarWS.CarRent")
-public class CarRentImpl implements CarRent {
+@WebService
+public class CarRentServer {
+    public static final int port = 8080;
+
     private Hashtable hash;
     private int totalCars;
+    private int totalCost;
+    private Vector foundCars;
 
-    public CarRentImpl() {
+    public CarRentServer() {
         hash = new Hashtable();
         totalCars = 0;
+        totalCost = 0;
+        foundCars = new Vector();
+    }
+
+    @WebMethod
+    public int returnTotalCost() {
+        return totalCost;
+    }
+
+    @WebMethod
+    public int returnTotalCars() {
+        return totalCars;
+    }
+
+    @WebMethod
+    public Car returnObjCars(int ID) {
+        return (Car) hash.get(ID);
+    }
+
+    @WebMethod
+    public Vector returnFoundCars() {
+        return foundCars;
+    }
+
+    @WebMethod
+    public void clearFoundCars() {
+        foundCars.clear();
     }
 
     @WebMethod
@@ -34,10 +67,11 @@ public class CarRentImpl implements CarRent {
     public void showCertainCars(String carModel) {
         int totalCarsFound = 0;
         System.out.println("\n" + carModel + " cars: \n");
-        for (int i = 0; i < totalCars - 1; i++) {
+        for (int i = 0; i < totalCars; i++) {
             Car c = (Car) hash.get(i);
             if (c.CarModel.equals(carModel)) {
                 System.out.println(hash.get(i).toString());
+                foundCars.add(i);
                 totalCarsFound++;
             }
         }
@@ -67,7 +101,7 @@ public class CarRentImpl implements CarRent {
         if (c.isRent == "YES") {
             throw new IOException("Car is already rent!");
         }
-        int totalCost = DaysCount * c.CarRentCost;
+        totalCost = DaysCount * c.CarRentCost;
         c.isRent = "YES";
         hash.put(ID, c);
         System.out.println("Total rent cost is " + totalCost);
@@ -81,5 +115,11 @@ public class CarRentImpl implements CarRent {
         Car c = (Car) hash.get(ID);
         c.isRent = "NO";
         hash.put(ID, c);
+    }
+
+    public static void main(String[] args) {
+        CarRentServer service = new CarRentServer();
+        String url = String.format("http://localhost:%d/CarRent", port);
+        Endpoint.publish(url, service);
     }
 }
